@@ -3,20 +3,20 @@ import React, { useState, useEffect } from 'react';
 const CompoundNamingQuiz = () => {
   // Type I cations (fixed charge)
   const type1Cations = [
-    { symbol: 'Li+', name: 'lithium', charge: 1 },
-    { symbol: 'Na+', name: 'sodium', charge: 1 },
-    { symbol: 'K+', name: 'potassium', charge: 1 },
-    { symbol: 'Rb+', name: 'rubidium', charge: 1 },
-    { symbol: 'Cs+', name: 'cesium', charge: 1 },
-    { symbol: 'Mg2+', name: 'magnesium', charge: 2 },
-    { symbol: 'Ca2+', name: 'calcium', charge: 2 },
-    { symbol: 'Sr2+', name: 'strontium', charge: 2 },
-    { symbol: 'Ba2+', name: 'barium', charge: 2 },
-    { symbol: 'Zn2+', name: 'zinc', charge: 2 },
-    { symbol: 'Al3+', name: 'aluminum', charge: 3 },
-    { symbol: 'Ga3+', name: 'gallium', charge: 3 },
-    { symbol: 'Ag+', name: 'silver', charge: 1 },
-    { symbol: 'Cd2+', name: 'cadmium', charge: 2 }
+    { symbol: 'Li', name: 'lithium', charge: 1 },
+    { symbol: 'Na', name: 'sodium', charge: 1 },
+    { symbol: 'K', name: 'potassium', charge: 1 },
+    { symbol: 'Rb', name: 'rubidium', charge: 1 },
+    { symbol: 'Cs', name: 'cesium', charge: 1 },
+    { symbol: 'Mg', name: 'magnesium', charge: 2 },
+    { symbol: 'Ca', name: 'calcium', charge: 2 },
+    { symbol: 'Sr', name: 'strontium', charge: 2 },
+    { symbol: 'Ba', name: 'barium', charge: 2 },
+    { symbol: 'Zn', name: 'zinc', charge: 2 },
+    { symbol: 'Al', name: 'aluminum', charge: 3 },
+    { symbol: 'Ga', name: 'gallium', charge: 3 },
+    { symbol: 'Ag', name: 'silver', charge: 1 },
+    { symbol: 'Cd', name: 'cadmium', charge: 2 }
   ];
 
   // Type II cations (variable charge)
@@ -27,19 +27,47 @@ const CompoundNamingQuiz = () => {
     { symbol: 'Co', name: 'cobalt', charges: [2, 3] },
     { symbol: 'Cu', name: 'copper', charges: [1, 2] },
     { symbol: 'Sn', name: 'tin', charges: [2, 4] },
-    { symbol: 'Hg', name: 'mercury', charges: [1, 2] },
+    { symbol: 'Hg', name: 'mercury', charges: [2] },
     { symbol: 'Pb', name: 'lead', charges: [2, 4] }
   ];
 
-  // Anions
-  const anions = [
-    { symbol: 'N3-', name: 'nitride', charge: -3 },
-    { symbol: 'O2-', name: 'oxide', charge: -2 },
-    { symbol: 'S2-', name: 'sulfide', charge: -2 },
-    { symbol: 'F-', name: 'fluoride', charge: -1 },
-    { symbol: 'Cl-', name: 'chloride', charge: -1 },
-    { symbol: 'Br-', name: 'bromide', charge: -1 },
-    { symbol: 'I-', name: 'iodide', charge: -1 }
+  // Simple anions
+  const simpleAnions = [
+    { symbol: 'N', name: 'nitride', charge: -3 },
+    { symbol: 'O', name: 'oxide', charge: -2 },
+    { symbol: 'S', name: 'sulfide', charge: -2 },
+    { symbol: 'F', name: 'fluoride', charge: -1 },
+    { symbol: 'Cl', name: 'chloride', charge: -1 },
+    { symbol: 'Br', name: 'bromide', charge: -1 },
+    { symbol: 'I', name: 'iodide', charge: -1 }
+  ];
+
+  // Polyatomic ions
+  const polyatomicIons = [
+    { formula: 'NH4', name: 'ammonium', charge: 1 },
+    { formula: 'NO2', name: 'nitrite', charge: -1 },
+    { formula: 'NO3', name: 'nitrate', charge: -1 },
+    { formula: 'SO3', name: 'sulfite', charge: -2 },
+    { formula: 'SO4', name: 'sulfate', charge: -2 },
+    { formula: 'HSO4', name: 'hydrogen sulfate', charge: -1 },
+    { formula: 'OH', name: 'hydroxide', charge: -1 },
+    { formula: 'CN', name: 'cyanide', charge: -1 },
+    { formula: 'PO4', name: 'phosphate', charge: -3 },
+    { formula: 'HPO4', name: 'hydrogen phosphate', charge: -2 },
+    { formula: 'H2PO4', name: 'dihydrogen phosphate', charge: -1 },
+    { formula: 'CO3', name: 'carbonate', charge: -2 },
+    { formula: 'HCO3', name: 'hydrogen carbonate', charge: -1 },
+    { formula: 'ClO', name: 'hypochlorite', charge: -1 },
+    { formula: 'ClO2', name: 'chlorite', charge: -1 },
+    { formula: 'ClO3', name: 'chlorate', charge: -1 },
+    { formula: 'ClO4', name: 'perchlorate', charge: -1 },
+    { formula: 'C2H3O2', name: 'acetate', charge: -1 },
+    { formula: 'MnO4', name: 'permanganate', charge: -1 },
+    { formula: 'Cr2O7', name: 'dichromate', charge: -2 },
+    { formula: 'CrO4', name: 'chromate', charge: -2 },
+    { formula: 'O2', name: 'peroxide', charge: -2 },
+    { formula: 'C2O4', name: 'oxalate', charge: -2 },
+    { formula: 'S2O3', name: 'thiosulfate', charge: -2 }
   ];
 
   // Type III elements (for covalent compounds)
@@ -65,51 +93,156 @@ const CompoundNamingQuiz = () => {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [selectedType, setSelectedType] = useState('all');
 
-  const generateType1Question = () => {
+  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+
+  const generateType1WithSimpleAnion = () => {
     const cation = type1Cations[Math.floor(Math.random() * type1Cations.length)];
-    const anion = anions[Math.floor(Math.random() * anions.length)];
+    const anion = simpleAnions[Math.floor(Math.random() * simpleAnions.length)];
     
     const cationCount = Math.abs(anion.charge);
     const anionCount = Math.abs(cation.charge);
     
-    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
     const divisor = gcd(cationCount, anionCount);
     const finalCationCount = cationCount / divisor;
     const finalAnionCount = anionCount / divisor;
     
-    const formula = `${cation.symbol.replace(/\d?\+$/, '')}${finalCationCount > 1 ? finalCationCount : ''}${anion.symbol.replace(/\d?-$/, '')}${finalAnionCount > 1 ? finalAnionCount : ''}`;
+    const formula = `${cation.symbol}${finalCationCount > 1 ? finalCationCount : ''}${anion.symbol}${finalAnionCount > 1 ? finalAnionCount : ''}`;
     const correctAnswer = `${cation.name} ${anion.name}`;
     
     return {
-      type: 'Type I',
+      type: 'Type I (Binary Ionic)',
       formula,
       correctAnswer,
-      explanation: `Type I binary ionic compounds have metals with fixed charges. Simply name the cation followed by the anion.`
+      explanation: `Type I binary ionic compounds: metal name + anion name. ${cation.name} has a fixed charge of +${cation.charge}.`
     };
   };
 
-  const generateType2Question = () => {
+  const generateType1WithPolyatomic = () => {
+    const cation = type1Cations[Math.floor(Math.random() * type1Cations.length)];
+    const polyatomic = polyatomicIons.filter(p => p.charge < 0)[Math.floor(Math.random() * polyatomicIons.filter(p => p.charge < 0).length)];
+    
+    const cationCount = Math.abs(polyatomic.charge);
+    const anionCount = Math.abs(cation.charge);
+    
+    const divisor = gcd(cationCount, anionCount);
+    const finalCationCount = cationCount / divisor;
+    const finalAnionCount = anionCount / divisor;
+    
+    const needsParentheses = finalAnionCount > 1;
+    const polyatomicPart = needsParentheses ? `(${polyatomic.formula})${finalAnionCount}` : polyatomic.formula;
+    
+    const formula = `${cation.symbol}${finalCationCount > 1 ? finalCationCount : ''}${polyatomicPart}`;
+    const correctAnswer = `${cation.name} ${polyatomic.name}`;
+    
+    return {
+      type: 'Type I (with Polyatomic Ion)',
+      formula,
+      correctAnswer,
+      explanation: `Type I with polyatomic ion: metal name + polyatomic ion name. Use parentheses when you need more than one polyatomic ion.`
+    };
+  };
+
+  const generateAmmoniumCompound = () => {
+    const ammonium = polyatomicIons.find(p => p.formula === 'NH4');
+    const anion = simpleAnions[Math.floor(Math.random() * simpleAnions.length)];
+    
+    const cationCount = Math.abs(anion.charge);
+    const anionCount = Math.abs(ammonium.charge);
+    
+    const divisor = gcd(cationCount, anionCount);
+    const finalCationCount = cationCount / divisor;
+    const finalAnionCount = anionCount / divisor;
+    
+    const needsParentheses = finalCationCount > 1;
+    const ammoniumPart = needsParentheses ? `(${ammonium.formula})${finalCationCount}` : ammonium.formula;
+    
+    const formula = `${ammoniumPart}${anion.symbol}${finalAnionCount > 1 ? finalAnionCount : ''}`;
+    const correctAnswer = `${ammonium.name} ${anion.name}`;
+    
+    return {
+      type: 'Type I (Ammonium Compound)',
+      formula,
+      correctAnswer,
+      explanation: `Ammonium (NH₄⁺) is a polyatomic cation. Name it like Type I: ammonium + anion name.`
+    };
+  };
+
+  const generateAmmoniumWithPolyatomic = () => {
+    const ammonium = polyatomicIons.find(p => p.formula === 'NH4');
+    const anion = polyatomicIons.filter(p => p.charge < 0)[Math.floor(Math.random() * polyatomicIons.filter(p => p.charge < 0).length)];
+    
+    const cationCount = Math.abs(anion.charge);
+    const anionCount = Math.abs(ammonium.charge);
+    
+    const divisor = gcd(cationCount, anionCount);
+    const finalCationCount = cationCount / divisor;
+    const finalAnionCount = anionCount / divisor;
+    
+    const needsCationParentheses = finalCationCount > 1;
+    const needsAnionParentheses = finalAnionCount > 1;
+    
+    const ammoniumPart = needsCationParentheses ? `(${ammonium.formula})${finalCationCount}` : ammonium.formula;
+    const anionPart = needsAnionParentheses ? `(${anion.formula})${finalAnionCount}` : anion.formula;
+    
+    const formula = `${ammoniumPart}${anionPart}`;
+    const correctAnswer = `${ammonium.name} ${anion.name}`;
+    
+    return {
+      type: 'Type I (Ammonium + Polyatomic)',
+      formula,
+      correctAnswer,
+      explanation: `Both ions are polyatomic. Simply name: ammonium + polyatomic anion name.`
+    };
+  };
+
+  const generateType2WithSimpleAnion = () => {
     const cation = type2Cations[Math.floor(Math.random() * type2Cations.length)];
-    const anion = anions[Math.floor(Math.random() * anions.length)];
+    const anion = simpleAnions[Math.floor(Math.random() * simpleAnions.length)];
     const charge = cation.charges[Math.floor(Math.random() * cation.charges.length)];
     
     const cationCount = Math.abs(anion.charge);
     const anionCount = Math.abs(charge);
     
-    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
     const divisor = gcd(cationCount, anionCount);
     const finalCationCount = cationCount / divisor;
     const finalAnionCount = anionCount / divisor;
     
-    const formula = `${cation.symbol}${finalCationCount > 1 ? finalCationCount : ''}${anion.symbol.replace(/\d?-$/, '')}${finalAnionCount > 1 ? finalAnionCount : ''}`;
+    const formula = `${cation.symbol}${finalCationCount > 1 ? finalCationCount : ''}${anion.symbol}${finalAnionCount > 1 ? finalAnionCount : ''}`;
     const romanNumeral = charge === 1 ? 'I' : charge === 2 ? 'II' : charge === 3 ? 'III' : 'IV';
     const correctAnswer = `${cation.name}(${romanNumeral}) ${anion.name}`;
     
     return {
-      type: 'Type II',
+      type: 'Type II (Binary Ionic)',
       formula,
       correctAnswer,
-      explanation: `Type II binary ionic compounds have metals with variable charges. Use Roman numerals to indicate the charge.`
+      explanation: `Type II binary ionic: metal name(Roman numeral) + anion name. The Roman numeral indicates the charge.`
+    };
+  };
+
+  const generateType2WithPolyatomic = () => {
+    const cation = type2Cations[Math.floor(Math.random() * type2Cations.length)];
+    const polyatomic = polyatomicIons.filter(p => p.charge < 0)[Math.floor(Math.random() * polyatomicIons.filter(p => p.charge < 0).length)];
+    const charge = cation.charges[Math.floor(Math.random() * cation.charges.length)];
+    
+    const cationCount = Math.abs(polyatomic.charge);
+    const anionCount = Math.abs(charge);
+    
+    const divisor = gcd(cationCount, anionCount);
+    const finalCationCount = cationCount / divisor;
+    const finalAnionCount = anionCount / divisor;
+    
+    const needsParentheses = finalAnionCount > 1;
+    const polyatomicPart = needsParentheses ? `(${polyatomic.formula})${finalAnionCount}` : polyatomic.formula;
+    
+    const formula = `${cation.symbol}${finalCationCount > 1 ? finalCationCount : ''}${polyatomicPart}`;
+    const romanNumeral = charge === 1 ? 'I' : charge === 2 ? 'II' : charge === 3 ? 'III' : 'IV';
+    const correctAnswer = `${cation.name}(${romanNumeral}) ${polyatomic.name}`;
+    
+    return {
+      type: 'Type II (with Polyatomic Ion)',
+      formula,
+      correctAnswer,
+      explanation: `Type II with polyatomic: metal name(Roman numeral) + polyatomic ion name. The charge must be determined from the formula.`
     };
   };
 
@@ -150,10 +283,10 @@ const CompoundNamingQuiz = () => {
     const correctAnswer = `${prefix1}${element1Name} ${prefix2}${element2Name}`;
     
     return {
-      type: 'Type III',
+      type: 'Type III (Binary Covalent)',
       formula,
       correctAnswer,
-      explanation: `Type III binary covalent compounds use prefixes to indicate the number of each atom. Drop 'mono' for the first element and 'o' or 'a' before 'oxide'.`
+      explanation: `Type III binary covalent: Use prefixes for both elements. Drop 'mono' for the first element.`
     };
   };
 
@@ -162,16 +295,37 @@ const CompoundNamingQuiz = () => {
     setFeedback('');
     
     let question;
-    if (selectedType === 'type1') {
-      question = generateType1Question();
-    } else if (selectedType === 'type2') {
-      question = generateType2Question();
+    
+    if (selectedType === 'type1-simple') {
+      question = generateType1WithSimpleAnion();
+    } else if (selectedType === 'type1-poly') {
+      const rand = Math.random();
+      if (rand < 0.33) {
+        question = generateType1WithPolyatomic();
+      } else if (rand < 0.66) {
+        question = generateAmmoniumCompound();
+      } else {
+        question = generateAmmoniumWithPolyatomic();
+      }
+    } else if (selectedType === 'type2-simple') {
+      question = generateType2WithSimpleAnion();
+    } else if (selectedType === 'type2-poly') {
+      question = generateType2WithPolyatomic();
     } else if (selectedType === 'type3') {
       question = generateType3Question();
     } else {
-      const types = [generateType1Question, generateType2Question, generateType3Question];
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      question = randomType();
+      // All types - random selection
+      const generators = [
+        generateType1WithSimpleAnion,
+        generateType1WithPolyatomic,
+        generateAmmoniumCompound,
+        generateAmmoniumWithPolyatomic,
+        generateType2WithSimpleAnion,
+        generateType2WithPolyatomic,
+        generateType3Question
+      ];
+      const randomGenerator = generators[Math.floor(Math.random() * generators.length)];
+      question = randomGenerator();
     }
     
     setCurrentQuestion(question);
@@ -241,9 +395,11 @@ const CompoundNamingQuiz = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 <option value="all">All Types (Random)</option>
-                <option value="type1">Type I Only (Fixed Charge Metals)</option>
-                <option value="type2">Type II Only (Variable Charge Metals)</option>
-                <option value="type3">Type III Only (Covalent)</option>
+                <option value="type1-simple">Type I - Binary Only</option>
+                <option value="type1-poly">Type I - With Polyatomic Ions</option>
+                <option value="type2-simple">Type II - Binary Only</option>
+                <option value="type2-poly">Type II - With Polyatomic Ions</option>
+                <option value="type3">Type III - Covalent Compounds</option>
               </select>
             </div>
 
@@ -299,11 +455,16 @@ const CompoundNamingQuiz = () => {
                   )}
                 </div>
 
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm text-gray-700">
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm text-gray-700 space-y-2">
                   <div className="font-semibold mb-2">Quick Reference:</div>
-                  <div><strong>Type I:</strong> Metal (fixed charge) + nonmetal → metal name + anion name</div>
-                  <div><strong>Type II:</strong> Metal (variable charge) + nonmetal → metal name(Roman numeral) + anion name</div>
-                  <div><strong>Type III:</strong> Nonmetal + nonmetal → prefix + element1 + prefix + element2-ide</div>
+                  <div><strong>Type I Binary:</strong> Fixed charge metal + simple anion</div>
+                  <div><strong>Type I Polyatomic:</strong> Fixed charge metal + polyatomic ion</div>
+                  <div><strong>Type II Binary:</strong> Variable charge metal(Roman numeral) + simple anion</div>
+                  <div><strong>Type II Polyatomic:</strong> Variable charge metal(Roman numeral) + polyatomic ion</div>
+                  <div><strong>Type III:</strong> Nonmetal + nonmetal (use prefixes)</div>
+                  <div className="mt-3 pt-3 border-t border-blue-200">
+                    <strong>Common Polyatomic Ions:</strong> NH₄⁺ (ammonium), NO₃⁻ (nitrate), SO₄²⁻ (sulfate), CO₃²⁻ (carbonate), PO₄³⁻ (phosphate), OH⁻ (hydroxide)
+                  </div>
                 </div>
               </div>
             )}
